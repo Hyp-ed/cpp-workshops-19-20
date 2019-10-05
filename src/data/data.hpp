@@ -1,6 +1,7 @@
 namespace hyped {
 
 namespace data {
+
 enum State {
     Idle,
     Ready,
