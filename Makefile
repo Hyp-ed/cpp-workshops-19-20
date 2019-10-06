@@ -13,7 +13,7 @@ LFLAGS:=-lpthread -pthread
 
 # default configuration
 CROSS=0
-NOLINT=0
+NOLINT=1
 PROTOBUF=0
 
 ifeq ($(CROSS), 0)
