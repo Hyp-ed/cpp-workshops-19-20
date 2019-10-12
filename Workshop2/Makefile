@@ -5,35 +5,11 @@
 TARGET=hyped
 MAIN=main.cpp
 SRCS_DIR:=src
-LIBS_DIR:=lib
 OBJS_DIR:=bin
 
 CFLAGS:=-pthread -std=c++11 -O2 -Wall -Wno-unused-result
-LFLAGS:=-lpthread -pthread
 
-# default configuration
-CROSS=0
-NOLINT=1
-PROTOBUF=0
-
-ifeq ($(CROSS), 0)
-	CC:=g++
-	UNAME=$(shell uname)
-	ifneq ($(UNAME),Linux)
-		# assume Windows
-		UNAME='Windows'
-		CFLAGS:=$(CFLAGS) -DWIN
-	endif
-	ARCH=$(shell uname -m)
-	ifneq (,$(findstring 64,$(ARCH)))
-		CFLAGS:=$(CFLAGS) -DARCH_64
-	endif
-else
-	CC:=hyped-cross-g++
-	CFLAGS:=$(CFLAGS) -DARCH_32
-	LFLAGS:= $(LFLAGS) -static
-$(info cross-compiling)
-endif
+CC:=g++
 
 # test if compiler is installed
 ifeq ($(shell which $(CC)), )
@@ -44,11 +20,6 @@ LL:=$(CC)
 
 include $(SRCS_DIR)/Source.files
 
-ifeq ($(PROTOBUF), 1)
-	CFLAGS:=$(CFLAGS) $(shell pkg-config --cflags protobuf)
-	LFLAGS:=$(LFLAGS) $(shell pkg-config --libs protobuf)
-	SRCS:=$(SRCS) $(shell find src/telemetry -type f -name '*.cpp' | sed 's|^src/||')
-endif
 
 SRCS := $(SRCS) $(MAIN)
 OBJS := $(SRCS:.cpp=.o)
@@ -66,13 +37,11 @@ ifndef VERBOSE
 endif
 Echo := $(Verb)echo
 
-
-
-default: lint $(TARGET)
+default: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(Echo) "Linking executable $(MAIN) into $@"
-	$(Verb) $(LL)  -o $@ $(OBJS) $(LFLAGS)
+	$(Verb) $(LL)  -o $@ $(OBJS)
 
 
 $(OBJS): $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
@@ -80,33 +49,16 @@ $(OBJS): $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 	$(Verb) mkdir -p $(dir $@)
 	$(Verb) $(CC) $(DEPFLAGS) $(CFLAGS) -o $@ -c $(INC_DIR) $<
 
-lint:
-ifeq ($(NOLINT), 0)
-	$(Verb) python2.7 utils/Lint/presubmit.py
-endif
 
-clean: cleanlint
+clean:
 	$(Verb) rm -rf $(OBJS_DIR)/*
 	$(Verb) rm -f $(TARGET)
 	$(Verb) rm -f $(MAINS)
-	$(Verb) find src | xargs touch
-	$(Verb) touch Makefile
 
-cleanlint:
-	$(Verb) rm -f .cpplint-cache
 
 define echo_var
 	@echo $(1) = $($1)
 endef
-
-.PHONY: doc
-doc:
-	$(Verb) doxygen Doxyfile
-
-protoc:
-	-$(Verb) mkdir -p src/telemetry/telemetrydata
-	$(Verb) protoc -I=src/telemetry --cpp_out=src/telemetry/telemetrydata message.proto
-	$(Verb) mv src/telemetry/telemetrydata/message.pb.cc src/telemetry/telemetrydata/message.pb.cpp
 
 info:
 	$(call echo_var,CC)
