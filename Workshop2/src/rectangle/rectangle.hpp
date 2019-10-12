@@ -1,28 +1,21 @@
 
-#ifndef HYPED_RECTANGLE_RECTANGE_H
+#ifndef HYPED_RECTANGLE_RECTANGE_H      // guards necessary for header files
 #define HYPED_RECTANGLE_RECTANGE_H
 
 namespace hyped {
-namespace rectangle {
+namespace rectangle {                   // namespaces are all lower case
 
 class Rectangle {
   // FILL HERE
 
  public:
-  Rectangle(int height, int width)
-    : height_(height),
-      width_(width) { /* EMPTY */ }
+  Rectangle(int height, int width);
 
-  int getArea() { return height_ * width_; }
+  int getArea();
 
-  void setHeight(int height) { height_ = height; }
+  void setHeight(int height);
 
-  void setWidth(int width) { width_ = width; }
-
- private:
-  Rectangle()
-      : height_(0),
-        width_(0) { /* EMPTY */ }
+  void setWidth(int width);
 
  private:
   int height_;

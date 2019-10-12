@@ -1,11 +1,13 @@
 #include <iostream>
 #include "utils/logger.hpp"
-#include "rectangle/rectangle.hpp"
+#include "rectangle/rectangle.hpp"    // complete directory path
 
+// do not use "using namespace std"
 using std::cin;
 using hyped::utils::Logger;
 using hyped::rectangle::Rectangle;
 
+// indentation is two spaces
 int main() {
   Logger log(true, 3);
 
