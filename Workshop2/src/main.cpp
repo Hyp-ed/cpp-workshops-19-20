@@ -1,11 +1,12 @@
 #include <iostream>
 #include "utils/logger.hpp"
 
-using namespace std;
+// do not use "using namespace std"
 using hyped::utils::Logger;
 
+// indentation is two spaces
 int main() {
-  Logger log_(true, 3);
+  Logger log(true, 3);
 
   // test your state machine transitions
 
