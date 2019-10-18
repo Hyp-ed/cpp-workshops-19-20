@@ -31,7 +31,7 @@ DEP_DIR := $(OBJS_DIR)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d
 INC_DIR := -I$(SRCS_DIR) -I$(LIBS_DIR)/eigen-git-mirror
 
-default: lint $(TARGET)
+default: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(Echo) "Linking executable $(MAIN) into $@"
