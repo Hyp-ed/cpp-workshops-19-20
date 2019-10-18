@@ -31,6 +31,12 @@ DEP_DIR := $(OBJS_DIR)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d
 INC_DIR := -I$(SRCS_DIR) -I$(LIBS_DIR)/eigen-git-mirror
 
+# run "make VERBOSE=1" to see all commands
+ifndef VERBOSE
+	Verb := @
+endif
+Echo := $(Verb)echo
+
 default: $(TARGET)
 
 $(TARGET): $(OBJS)
@@ -44,7 +50,7 @@ $(OBJS): $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 	$(Verb) $(CC) $(DEPFLAGS) $(CFLAGS) -o $@ -c $(INC_DIR) $<
 
 
-clean: cleanlint
+clean:
 	$(Verb) rm -rf $(OBJS_DIR)/*
 	$(Verb) rm -f $(TARGET)
 	$(Verb) rm -f $(MAINS)
